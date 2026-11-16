@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Galería · Laura Herrera</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Pinyon+Script&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+/* VOICE: escaparate de lujo nocturno, sereno y teatral, para adultos que quieren aprender a pintar
+   IDEA: una sala oscura donde los cuadros flotan bajo un solo foco, como piezas de museo en exhibición
+   PICTURE: anillo 3D de cuadros enmarcados girando bajo una lámpara; al bajar, cada cuadro pasa al frente sobre el color de su pintura
+   COLOUR and TYPE: noche #050a16, oro #c9a45c/#e6cb8b, marfil #f3ead8; escenas bermellón, bosque, ocre y azul galería; Pinyon Script + Cormorant Garamond + Jost
+   LAYOUT: portada con lámpara y carrusel → escenas fijas por cuadro (método) → maestra → niveles → horarios → inscripción → preguntas */
+:root{color-scheme:dark;--night:#050a16;--bg:#0a1a35;--deep:#06112a;--ink:#f3ead8;--soft:#c7cbd6;--gold:#c9a45c;--gold2:#e6cb8b;--line:rgba(201,164,92,.28)}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--night);color:var(--ink);font:300 17px/1.6 Jost,system-ui,sans-serif;overflow-x:clip}
+img{display:block;max-width:100%}
+a{color:var(--gold2)}
+:focus-visible{outline:2px solid var(--gold2);outline-offset:3px}
+.wrap{max-width:1240px;margin:0 auto}
+.band{padding:clamp(64px,8vw,120px) max(5vw,18px)}
+h2{font:500 clamp(34px,4.4vw,52px)/1.05 "Cormorant Garamond",serif;margin:0 0 14px;text-wrap:balance}
+h3{font:600 25px/1.15 "Cormorant Garamond",serif;margin:0 0 8px;color:var(--gold2)}
+.lead{color:var(--soft);max-width:62ch;margin:0 0 40px}
+.btn.wa{background:#25d366;border-color:#25d366;color:#0b2a17;gap:10px;margin:0 12px 14px 0}.btn.wa:hover,.btn.wa:focus-visible{background:#1fb457;color:#fff}
+.waNote{color:var(--soft);font-size:15px;margin:0 0 16px}
+.btn:disabled{opacity:.6;cursor:wait}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:12px 28px;border:1px solid var(--gold);background:var(--gold);color:#13213d;font:500 16px Jost,sans-serif;text-decoration:none;cursor:pointer;transition:background .25s,color .25s}
+.btn:hover,.btn:focus-visible{background:transparent;color:var(--gold2)}
+.btn.ghost{background:transparent;color:var(--gold2)}.btn.ghost:hover{background:var(--gold);color:#13213d}
+.btns{display:flex;flex-wrap:wrap;justify-content:center;gap:12px}
+.enroll .btns,.level .btns{justify-content:flex-start}
+
+.spot{position:absolute;left:0;top:0;width:var(--ss,200px);height:var(--ss,200px);border-radius:50%;pointer-events:none;z-index:4;opacity:0;transition:opacity .35s;
+ background:radial-gradient(circle at center,rgba(255,238,200,.38),rgba(255,224,170,.14) 45%,transparent 70%);mix-blend-mode:screen;filter:blur(4px);will-change:transform}
+.spot.on{opacity:1}
+.skip{position:fixed;left:12px;top:-60px;z-index:40;background:var(--gold2);color:#13213d;padding:10px 16px;text-decoration:none;transition:top .2s}.skip:focus{top:12px}
+.bar{position:fixed;left:0;top:0;height:2px;width:100%;background:var(--gold2);transform-origin:0 50%;transform:scaleX(0);z-index:30}
+nav{position:fixed;inset:0 0 auto;z-index:25;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px 24px;padding:16px max(4vw,18px);transition:background .4s}
+nav.solid{background:rgba(5,10,22,.82);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.brand{font:500 20px "Cormorant Garamond",serif;letter-spacing:.04em;color:var(--ink);text-decoration:none}
+nav ul{display:flex;flex-wrap:wrap;align-items:center;gap:4px 22px;list-style:none;margin:0;padding:0}
+nav ul a{color:var(--soft);text-decoration:none;font-size:15px;padding:10px 0;display:inline-block}
+nav ul a:hover,nav ul a.on{color:var(--gold2)}
+.menu{display:none;min-height:44px;padding:8px 16px;background:transparent;border:1px solid var(--line);color:var(--ink);font:400 15px Jost,sans-serif;cursor:pointer}
+nav ul a.cta{border:1px solid var(--gold);padding:8px 18px;color:var(--gold2);color:var(--gold2);text-decoration:none;font-size:15px}
+
+/* ---------- portada: sala con lámpara y carrusel 3D ---------- */
+.hero{--lw:clamp(210px,19vw,290px);position:relative;height:100vh;height:100svh;min-height:640px;overflow:hidden;
+ background:radial-gradient(ellipse 70% 60% at 50% 0%,#14213f 0%,var(--night) 60%)}
+.rig{position:absolute;left:50%;top:0;width:0;height:100%;z-index:3;transform-origin:50% 0;animation:sway 6.5s ease-in-out infinite;pointer-events:none}
+@keyframes sway{0%,100%{transform:rotate(1.1deg)}50%{transform:rotate(-1.1deg)}}
+.ff{transform-box:fill-box;transform-origin:50% 100%;animation:flick 2.6s ease-in-out infinite}
+.fg{animation:glow 3.2s ease-in-out infinite}
+@keyframes flick{0%,100%{transform:scale(1,1)}30%{transform:scale(.94,1.06) skewX(2deg)}60%{transform:scale(1.03,.96) skewX(-2deg)}}
+@keyframes glow{0%,100%{opacity:.9}45%{opacity:1}70%{opacity:.75}}
+.lamp{position:absolute;left:calc(var(--lw)/-2);top:0;width:var(--lw);height:auto;overflow:visible;z-index:2}
+.halo{position:absolute;left:calc(var(--lw)*-1.6);top:calc(var(--lw)*.05);width:calc(var(--lw)*3.2);height:calc(var(--lw)*1.1);border-radius:50%;background:radial-gradient(ellipse at center,rgba(255,214,140,.28),rgba(255,200,120,.10) 40%,transparent 70%);filter:blur(6px);z-index:1}
+.cone{position:absolute;left:50%;top:calc(var(--lw)*.6);transform:translateX(-50%);width:min(1150px,170vw);height:calc(100svh - var(--lw)*.8);
+ background:radial-gradient(ellipse 38% 75% at 50% 0%,rgba(255,220,160,.22),rgba(255,214,150,.07) 50%,transparent 85%);
+ filter:blur(8px);mix-blend-mode:screen;z-index:0}
+.dust{position:absolute;left:50%;top:calc(var(--lw)*.9);transform:translateX(-50%);width:min(700px,100vw);height:60svh;opacity:.5;
+ background-image:radial-gradient(1px 1px at 20% 30%,#fff3d6,transparent),radial-gradient(1px 1px at 60% 20%,#fff3d6,transparent),radial-gradient(1.5px 1.5px at 40% 60%,#fff3d6,transparent),radial-gradient(1px 1px at 75% 50%,#fff3d6,transparent),radial-gradient(1px 1px at 30% 80%,#fff3d6,transparent),radial-gradient(1px 1px at 52% 42%,#fff3d6,transparent);
+ -webkit-mask-image:radial-gradient(ellipse 45% 80% at 50% 0%,#000,transparent);mask-image:radial-gradient(ellipse 45% 80% at 50% 0%,#000,transparent);animation:dust 14s linear infinite}
+@keyframes dust{from{background-position:0 0}to{background-position:0 -200px}}
+.floor{position:absolute;left:50%;bottom:-22vh;transform:translateX(-50%);width:120vw;height:46vh;border-radius:50%;
+ background:radial-gradient(ellipse at center,rgba(230,203,139,.22),rgba(120,90,200,.08) 40%,transparent 70%);z-index:1}
+.htitle{position:absolute;left:0;right:0;top:calc(var(--lw)*.86);text-align:center;z-index:4;padding:0 16px;will-change:transform,opacity}
+.htitle h1{font:400 clamp(54px,8.4vw,118px)/1 "Pinyon Script",cursive;margin:0;color:var(--gold2);text-shadow:0 2px 34px rgba(230,203,139,.3)}
+.htitle p{font:italic 400 clamp(18px,1.9vw,23px)/1.3 "Cormorant Garamond",serif;margin:4px 0 0;color:var(--soft)}
+.stage3d{position:absolute;left:0;right:0;top:50%;bottom:17%;perspective:1500px;perspective-origin:50% 30%;z-index:3}
+.ring{position:absolute;left:50%;top:50%;width:0;height:0;transform-style:preserve-3d}
+.stage3d:focus-visible{outline-offset:-6px}
+.piece{position:absolute;left:0;top:0;cursor:pointer;will-change:transform,filter;border:0;background:none;padding:0}
+.piece .c{display:block;transform:translate(-50%,-50%)}
+.piece img{height:var(--ph,220px);width:auto;max-width:none;filter:drop-shadow(0 26px 22px rgba(0,0,0,.65));animation:bob 6s ease-in-out infinite;animation-delay:var(--dl,0s)}
+@keyframes bob{50%{transform:translateY(-14px)}}
+.hfoot{position:absolute;left:0;right:0;bottom:clamp(18px,4vh,40px);z-index:5;display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center;padding:0 16px}
+.hfoot p{margin:0;color:var(--soft);max-width:52ch}
+.hint{font-size:13px;color:#8e97ab}
+.now{font:italic 400 19px/1.2 "Cormorant Garamond",serif;color:var(--gold2);min-height:23px;margin:0 !important}
+
+/* ---------- escenas fijas: un cuadro por paso ---------- */
+.show{position:relative;height:280vh}
+.show .pin{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;background:var(--sc,#7a1f0e);transition:background .8s ease}
+.show .glow{position:absolute;inset:0;background:radial-gradient(ellipse 50% 60% at 62% 45%,rgba(255,240,210,.22),transparent 70%),linear-gradient(180deg,rgba(0,0,0,.05),rgba(0,0,0,.45))}
+.bigword{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);text-align:center;white-space:nowrap;
+ font:700 clamp(90px,19vw,300px)/1 "Cormorant Garamond",serif;color:rgba(255,245,225,.10);letter-spacing:-.01em;pointer-events:none;will-change:transform}
+.frame3d{position:absolute;left:62%;top:52%;width:min(36vh,30vw);perspective:1200px;transform:translate(-50%,-50%)}
+.frame3d .card{position:relative;transform-style:preserve-3d;will-change:transform}
+.frame3d img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;opacity:0;filter:drop-shadow(0 40px 40px rgba(0,0,0,.55))}
+.frame3d img.on{opacity:1}
+.frame3d .sizer{visibility:hidden;position:relative}
+.info{position:absolute;left:max(5vw,18px);top:50%;transform:translateY(-50%);width:min(380px,38vw)}
+.info .item{position:absolute;inset:0 auto auto 0;opacity:0;transform:translateY(24px);transition:opacity .5s,transform .5s;width:100%;pointer-events:none}
+.info .item.on{pointer-events:auto}
+.info .item.on{opacity:1;transform:none}
+.badge{display:inline-block;font-size:13px;color:#13213d;background:var(--gold2);padding:3px 10px;margin-bottom:14px}
+.info h3{font:600 clamp(38px,4.4vw,56px)/1 "Cormorant Garamond",serif;color:var(--ink);margin:0 0 14px}
+.info p{color:rgba(243,234,216,.85);margin:0 0 10px}
+.info small{color:rgba(243,234,216,.6);font-size:13.5px}
+.rail{position:absolute;right:max(3vw,14px);top:50%;transform:translateY(-50%);display:grid;gap:14px;z-index:3}
+.rail{gap:0 !important}
+.rail button{width:44px;height:44px;border:0;background:transparent;padding:0;cursor:pointer;display:grid;place-items:center}
+.rail button::before{content:"";width:11px;height:11px;border:1px solid var(--gold2);transform:rotate(45deg);transition:background .25s}
+.rail button.on::before,.rail button:hover::before{background:var(--gold2)}
+
+/* ---------- maestra ---------- */
+.teacher{background:var(--bg)}
+.teacher .wrap{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(30px,5vw,80px);align-items:center}
+.portrait{margin:0;justify-self:center;width:min(420px,100%)}
+@media (max-width:600px){.portrait{width:min(320px,86%)}}
+.pframe{position:relative;padding:12px;background:linear-gradient(135deg,#8a6420,#e6cb8b 30%,#b88a3a 55%,#f3dc9e 75%,#7a5518);box-shadow:0 30px 60px -20px rgba(0,0,0,.8),0 0 0 1px rgba(0,0,0,.4)}
+.pframe::before{content:"";position:absolute;inset:12px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.5),inset 0 0 24px rgba(0,0,0,.5);z-index:1;pointer-events:none}
+.pframe img{width:100%;height:auto;aspect-ratio:4/5;object-fit:cover;display:block}
+.portrait figcaption{margin-top:16px;text-align:center;font:italic 400 18px "Cormorant Garamond",serif;color:var(--soft)}
+.teacher .txt{padding-bottom:0}
+.teacher p{color:var(--soft)}
+.quote{font:italic 400 clamp(24px,2.8vw,34px)/1.25 "Cormorant Garamond",serif;border-left:1px solid var(--gold);padding-left:22px;margin:0 0 26px}
+.facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--line);border:1px solid var(--line);margin-top:26px}
+.facts div{background:var(--bg);padding:16px 14px}
+.facts b{display:block;font:500 21px "Cormorant Garamond",serif;color:var(--gold2)}
+.facts span{font-size:14px;color:var(--soft)}
+
+/* ---------- niveles ---------- */
+.levels{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}
+.level{border:1px solid var(--line);padding:30px 26px 26px;background:linear-gradient(180deg,rgba(255,255,255,.04),transparent);display:flex;flex-direction:column;transition:transform .4s,border-color .4s}
+.level:hover{transform:translateY(-6px);border-color:var(--gold)}
+.level.star{border-color:var(--gold);background:linear-gradient(180deg,rgba(201,164,92,.12),transparent)}
+.level p{color:var(--soft);margin:0 0 14px}
+.level ul{margin:0 0 22px;padding:0;list-style:none;font-size:15.5px}
+.level li{padding:7px 0 7px 22px;border-top:1px solid rgba(255,255,255,.07);position:relative}
+.level li::before{content:"";position:absolute;left:2px;top:15px;width:8px;height:8px;border:1px solid var(--gold);transform:rotate(45deg)}
+.level .btn{margin-top:auto}
+.adults{margin-top:28px;padding:16px 20px;border:1px dashed var(--line);color:var(--soft);font-size:15.5px}
+.adults b{color:var(--gold2);font-weight:500}
+
+/* ---------- horarios ---------- */
+.sched{width:100%;border-collapse:collapse}
+.sched th,.sched td{text-align:left;padding:16px 14px;border-bottom:1px solid var(--line)}
+.sched th{font-weight:400;color:var(--soft);font-size:14px}
+.sched td:first-child{font:500 20px "Cormorant Garamond",serif;color:var(--gold2)}
+.sched td{white-space:nowrap}.sched td:last-child{white-space:normal;color:var(--soft)}
+.note{font-size:13.5px;color:#9aa3b5;margin-top:14px}
+
+/* ---------- inscripción ---------- */
+.enroll{background:var(--deep)}
+.enroll .wrap{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:clamp(30px,5vw,80px);align-items:start}
+.enroll aside p,.enroll aside ol{color:var(--soft)}
+.enroll aside ol{padding-left:20px;margin:22px 0 0}.enroll aside li{margin-bottom:10px}
+form,.done{border:1px solid var(--line);padding:clamp(22px,3.5vw,40px);background:rgba(10,26,53,.7)}
+.row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.f{margin-bottom:20px}
+label,.lbl{display:block;font-size:15px;margin-bottom:7px}
+input[type=text],input[type=email],input[type=tel],select,textarea{width:100%;font:400 16px Jost,sans-serif;color:var(--ink);background:#0b1c3b;border:1px solid rgba(201,164,92,.35);padding:12px 14px;min-height:48px;border-radius:0}
+textarea{min-height:100px;resize:vertical}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold2);box-shadow:0 0 0 2px rgba(230,203,139,.25)}
+.choices{display:flex;flex-wrap:wrap;gap:10px}
+.choices label{display:flex;align-items:center;gap:8px;border:1px solid rgba(201,164,92,.35);padding:10px 14px;min-height:46px;cursor:pointer;margin:0;font-size:15px}
+.choices input{accent-color:var(--gold);width:18px;height:18px;margin:0}
+.choices label:has(input:checked){border-color:var(--gold2);background:rgba(201,164,92,.12)}
+.check{display:flex;gap:10px;align-items:flex-start;font-size:15px;color:var(--soft);cursor:pointer}
+.check input{accent-color:var(--gold);width:20px;height:20px;margin-top:3px;flex:none}
+.sendErr{color:#f2a99b;margin:14px 0 0}
+.summary{border:1px solid #f2a99b;padding:14px 18px;margin-bottom:22px;color:#f2a99b}.summary ul{margin:6px 0 0;padding-left:18px}.summary a{color:#f7c4b9}
+.err{color:#f2a99b;font-size:14px;margin-top:6px;display:none}
+.f.bad .err{display:block}.f.bad input{border-color:#f2a99b}
+.done{display:none}.done h3{font-size:32px}
+.done dl{display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px 18px;margin:20px 0}
+.done dt{color:var(--soft)}.done dd{margin:0}
+
+details{border-bottom:1px solid var(--line);max-width:860px}
+summary{cursor:pointer;list-style:none;padding:20px 40px 20px 0;font:500 23px/1.25 "Cormorant Garamond",serif;position:relative}
+summary::-webkit-details-marker{display:none}
+summary::after{content:"+";position:absolute;right:6px;top:16px;font-size:28px;color:var(--gold)}
+details[open] summary::after{content:"–"}
+details p{color:var(--soft);margin:0 0 22px;max-width:70ch}
+.finale{text-align:center;background:radial-gradient(ellipse 60% 80% at 50% 0%,rgba(230,203,139,.16),transparent 70%),var(--night);border-top:1px solid var(--line)}
+.finale p{color:var(--soft);margin:0 0 24px}.finale .fsig{font:400 clamp(40px,5vw,60px)/1 "Pinyon Script",cursive;color:var(--gold2);margin:0 0 6px}
+footer{background:#03070f;padding:48px max(5vw,18px);text-align:center;color:var(--soft);font-size:15px}
+footer .sig{font:400 44px/1 "Pinyon Script",cursive;color:var(--gold2);margin-bottom:10px}
+
+.rv{opacity:0;transform:translateY(36px);transition:opacity .9s,transform .9s;transition-delay:var(--d,0s)}
+.rv.in{opacity:1;transform:none}
+
+@media (max-width:900px){
+ .menu{display:inline-flex;align-items:center;margin-left:auto}
+ nav ul{display:none;width:100%;flex-direction:column;align-items:stretch;gap:0;background:rgba(5,10,22,.96);border:1px solid var(--line);padding:6px 16px}
+ nav ul.open{display:flex}
+ nav ul a{display:flex;align-items:center;min-height:48px}
+ nav ul a.cta{justify-content:center;margin:8px 0}
+ .levels{grid-template-columns:minmax(0,1fr)}
+ .teacher .wrap,.enroll .wrap{grid-template-columns:minmax(0,1fr)}
+ .frame3d{left:50%;top:38%;width:min(32vh,58vw)}
+ .info{left:max(5vw,18px);right:max(5vw,18px);top:auto;bottom:5vh;transform:none;width:auto;min-height:210px}
+ .info .item{background:rgba(0,0,0,.28);padding:16px 18px;backdrop-filter:blur(4px)}
+ .info h3{font-size:36px;margin-bottom:8px}.info p{font-size:15.5px}
+ .bigword{top:38%}
+}
+@media (max-width:600px){
+ .hero{--lw:190px}
+ .stage3d{top:43%;bottom:31%}
+ .hfoot p{font-size:15.5px}
+ .row,.facts{grid-template-columns:minmax(0,1fr)}
+ .sched thead{display:none}.sched tr{display:grid;padding:12px 0;border-bottom:1px solid var(--line)}
+ .sched td{border:0;padding:4px 0;white-space:normal}
+ .rail{right:10px;top:38%}
+}
+@media (prefers-reduced-motion:reduce){
+ .piece img,.rig,.dust,.ff,.fg{animation:none}
+ .rv{opacity:1;transform:none;transition:none}
+ .info .item,.frame3d img{transition:none}
+ .show{height:auto}.show .pin{position:relative;height:auto;padding:90px max(5vw,18px);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:40px;align-items:center}
+ .bigword,.rail{display:none}
+ .frame3d{position:relative;left:auto;top:auto;transform:none;width:min(360px,80vw);margin:0 auto}
+ .info{position:relative;left:auto;top:auto;bottom:auto;transform:none;width:auto;min-height:0}
+ .info .item{position:relative;opacity:1;transform:none;margin-bottom:28px;pointer-events:auto}
+ .frame3d img{opacity:0}.frame3d img[data-k=obra]{opacity:1}
+}
+@media (prefers-reduced-motion:reduce) and (max-width:900px){.show .pin{grid-template-columns:minmax(0,1fr)}}
+</style>
+</head>
+<body>
+<a class="skip" href="#metodo">Saltar al contenido</a>
+<div class="bar" id="bar"></div>
+<nav id="nav">
+ <a class="brand" href="#inicio">Laura Herrera</a>
+ <button class="menu" id="menuBtn" aria-expanded="false" aria-controls="navList">Menú</button>
+ <ul id="navList">
+  <li><a href="#metodo">Método</a></li>
+  <li><a href="#clases">Clases</a></li>
+  <li><a href="#horarios">Horarios</a></li>
+  <li><a href="#maestra">La maestra</a></li>
+  <li><a class="cta" href="#inscripcion">Inscríbete</a></li>
+ </ul>
+</nav>
+
+<header class="hero" id="inicio">
+ <div class="floor"></div>
+ <div class="rig" aria-hidden="true">
+  <div class="cone"></div><div class="dust"></div><div class="halo"></div>
+  <svg class="lamp" viewBox="0 0 400 370" aria-hidden="true">
+<defs>
+ <linearGradient id="br" x1="0" x2="1"><stop offset="0" stop-color="#5a3f12"/><stop offset=".25" stop-color="#c9973f"/><stop offset=".42" stop-color="#fff0b8"/><stop offset=".55" stop-color="#d8a84d"/><stop offset=".8" stop-color="#8a6420"/><stop offset="1" stop-color="#4a3410"/></linearGradient>
+ <linearGradient id="brv" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe9a8"/><stop offset=".45" stop-color="#c38f38"/><stop offset="1" stop-color="#5b3f12"/></linearGradient>
+ <radialGradient id="cr" cx=".35" cy=".35" r=".7"><stop offset="0" stop-color="#fff"/><stop offset=".4" stop-color="#fff6e0" stop-opacity=".9"/><stop offset="1" stop-color="#b9a27a" stop-opacity=".35"/></radialGradient>
+ <linearGradient id="pr" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity=".95"/><stop offset=".5" stop-color="#e9dcc0" stop-opacity=".5"/><stop offset="1" stop-color="#fffaf0" stop-opacity=".9"/></linearGradient>
+ <linearGradient id="cd" x1="0" x2="1"><stop offset="0" stop-color="#cdbb98"/><stop offset=".4" stop-color="#fbf3e2"/><stop offset="1" stop-color="#a99572"/></linearGradient>
+ <radialGradient id="fl" cx=".5" cy=".62" r=".6"><stop offset="0" stop-color="#fff"/><stop offset=".45" stop-color="#fff3c9"/><stop offset="1" stop-color="#ffc861"/></radialGradient>
+ <radialGradient id="gl" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#ffe2a0" stop-opacity=".9"/><stop offset=".35" stop-color="#ffc870" stop-opacity=".35"/><stop offset="1" stop-color="#ffb850" stop-opacity="0"/></radialGradient>
+ <radialGradient id="bowl" cx=".5" cy=".2" r=".9"><stop offset="0" stop-color="#fff8e4" stop-opacity=".95"/><stop offset=".5" stop-color="#e6cf9a" stop-opacity=".55"/><stop offset="1" stop-color="#7a5a24" stop-opacity=".5"/></radialGradient>
+</defs>
+<ellipse cx="200" cy="230" rx="190" ry="120" fill="url(#gl)" opacity=".55"/>
+<ellipse cx="200" cy="-4.0" rx="3.4" ry="5" fill="none" stroke="url(#br)" stroke-width="1.8"/>
+<ellipse cx="200" cy="4.2" rx="1.6" ry="5" fill="url(#br)"/>
+<ellipse cx="200" cy="12.4" rx="3.4" ry="5" fill="none" stroke="url(#br)" stroke-width="1.8"/>
+<ellipse cx="200" cy="20.6" rx="1.6" ry="5" fill="url(#br)"/>
+<ellipse cx="200" cy="28.8" rx="3.4" ry="5" fill="none" stroke="url(#br)" stroke-width="1.8"/>
+<ellipse cx="200" cy="37.0" rx="1.6" ry="5" fill="url(#br)"/>
+<ellipse cx="200" cy="45.2" rx="3.4" ry="5" fill="none" stroke="url(#br)" stroke-width="1.8"/>
+<ellipse cx="200" cy="53.4" rx="1.6" ry="5" fill="url(#br)"/>
+<ellipse cx="200" cy="61.6" rx="3.4" ry="5" fill="none" stroke="url(#br)" stroke-width="1.8"/>
+<path d="M188 70h24l6 10h-36z" fill="url(#brv)"/>
+<ellipse cx="200" cy="84" rx="48" ry="8" fill="url(#br)"/><ellipse cx="200" cy="82" rx="44" ry="5" fill="#3c2a0c" opacity=".5"/>
+<path d="M154.0 80c-4-6-2-12 0-14 2 6 4 10 0 14z" fill="url(#br)"/>
+<path d="M169.3 80c-4-6-2-14 0-16 2 8 4 12 0 16z" fill="url(#br)"/>
+<path d="M184.7 80c-4-6-2-15 0-17 2 9 4 13 0 17z" fill="url(#br)"/>
+<path d="M200.0 80c-4-6-2-16 0-18 2 10 4 14 0 18z" fill="url(#br)"/>
+<path d="M215.3 80c-4-6-2-15 0-17 2 9 4 13 0 17z" fill="url(#br)"/>
+<path d="M230.7 80c-4-6-2-14 0-16 2 8 4 12 0 16z" fill="url(#br)"/>
+<path d="M246.0 80c-4-6-2-12 0-14 2 6 4 10 0 14z" fill="url(#br)"/>
+<path d="M158.0 89l3 7-3 10-3-10z" fill="url(#pr)" stroke="#fff" stroke-opacity=".4" stroke-width=".4"/>
+<path d="M168.5 89l3 7-3 10-3-10z" fill="url(#pr)" stroke="#fff" stroke-opacity=".4" stroke-width=".4"/>
+<path d="M179.0 89l3 7-3 10-3-10z" fill="url(#pr)" stroke="#fff" stroke-opacity=".4" stroke-width=".4"/>
+<path d="M189.5 89l3 7-3 10-3-10z" fill="url(#pr)" stroke="#fff" stroke-opacity=".4" stroke-width=".4"/>
+<path d="M200.0 89l3 7-3 10-3-10z" fill="url(#pr)" stroke="#fff" stroke-opacity=".4" stroke-width=".4"/>
+<path d="M210.5 89l3 7-3 10-3-10z" fill="url(#pr)" stroke="#fff" stroke-opacity=".4" stroke-width=".4"/>
+<path d="M221.0 89l3 7-3 10-3-10z" fill="url(#pr)" stroke="#fff" stroke-opacity=".4" stroke-width=".4"/>
+<path d="M231.5 89l3 7-3 10-3-10z" fill="url(#pr)" stroke="#fff" stroke-opacity=".4" stroke-width=".4"/>
+<path d="M242.0 89l3 7-3 10-3-10z" fill="url(#pr)" stroke="#fff" stroke-opacity=".4" stroke-width=".4"/>
+<path d="M160.0 90Q182.0 170 108.0 232" fill="none" stroke="#fff6dc" stroke-opacity="0.55" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="0 4.6"/>
+<path d="M168.0 90Q185.6 170 126.4 232" fill="none" stroke="#fff6dc" stroke-opacity="0.62" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="0 4.6"/>
+<path d="M176.0 90Q189.2 170 144.8 232" fill="none" stroke="#fff6dc" stroke-opacity="0.69" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="0 4.6"/>
+<path d="M184.0 90Q192.8 170 163.2 232" fill="none" stroke="#fff6dc" stroke-opacity="0.76" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="0 4.6"/>
+<path d="M192.0 90Q196.4 170 181.6 232" fill="none" stroke="#fff6dc" stroke-opacity="0.83" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="0 4.6"/>
+<path d="M200.0 90Q200.0 170 200.0 232" fill="none" stroke="#fff6dc" stroke-opacity="0.90" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="0 4.6"/>
+<path d="M208.0 90Q203.6 170 218.4 232" fill="none" stroke="#fff6dc" stroke-opacity="0.83" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="0 4.6"/>
+<path d="M216.0 90Q207.2 170 236.8 232" fill="none" stroke="#fff6dc" stroke-opacity="0.76" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="0 4.6"/>
+<path d="M224.0 90Q210.8 170 255.2 232" fill="none" stroke="#fff6dc" stroke-opacity="0.69" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="0 4.6"/>
+<path d="M232.0 90Q214.4 170 273.6 232" fill="none" stroke="#fff6dc" stroke-opacity="0.62" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="0 4.6"/>
+<path d="M240.0 90Q218.0 170 292.0 232" fill="none" stroke="#fff6dc" stroke-opacity="0.55" stroke-width="2.4" stroke-linecap="round" stroke-dasharray="0 4.6"/>
+<rect x="197" y="88" width="6" height="150" fill="url(#br)"/>
+<ellipse cx="200" cy="120" rx="7" ry="4" fill="url(#br)"/>
+<ellipse cx="200" cy="168" rx="7" ry="4" fill="url(#br)"/>
+<g opacity="0.63"><path d="M169.4 232.6C161.9 277.2 144.9 277.2 139.5 180.6" fill="none" stroke="url(#br)" stroke-width="3.2" stroke-linecap="round"/><path d="M169.4 232.6c2.3 -14 -3.8 -22 -6.1 -10" fill="none" stroke="url(#br)" stroke-width="1.8" stroke-linecap="round"/><circle cx="154.5" cy="278.8" r="2.5" fill="url(#cr)"/><line x1="154.5" y1="271.2" x2="154.5" y2="276.6" stroke="#e8d6a8" stroke-width=".8"/><path d="M130.4 173.6l1.1 3.2-1.1 6.5-1.1-6.5z" fill="url(#pr)" stroke="#fff" stroke-opacity=".35" stroke-width=".4"/><path d="M132.7 173.6l1.1 3.2-1.1 6.5-1.1-6.5z" fill="url(#pr)" stroke="#fff" stroke-opacity=".35" stroke-width=".4"/><path d="M134.9 173.6l1.1 3.2-1.1 6.5-1.1-6.5z" fill="url(#pr)" stroke="#fff" stroke-opacity=".35" stroke-width=".4"/><path d="M137.2 173.6l1.1 3.2-1.1 6.5-1.1-6.5z" fill="url(#pr)" stroke="#fff" stroke-opacity=".35" stroke-width=".4"/><path d="M139.5 173.6l1.1 3.2-1.1 6.5-1.1-6.5z" fill="url(#pr)" stroke="#fff" stroke-opacity=".35" stroke-width=".4"/><path d="M141.8 173.6l1.1 3.2-1.1 6.5-1.1-6.5z" fill="url(#pr)" stroke="#fff" stroke-opacity=".35" stroke-width=".4"/><path d="M144.1 173.6l1.1 3.2-1.1 6.5-1.1-6.5z" fill="url(#pr)" stroke="#fff" stroke-opacity=".35" stroke-width=".4"/><path d="M146.4 173.6l1.1 3.2-1.1 6.5-1.1-6.5z" fill="url(#pr)" stroke="#fff" stroke-opacity=".35" stroke-width=".4"/><path d="M148.7 173.6l1.1 3.2-1.1 6.5-1.1-6.5z" fill="url(#pr)" stroke="#fff" stroke-opacity=".35" stroke-width=".4"/><ellipse cx="139.5" cy="172.0" rx="10.8" ry="2.7" fill="url(#br)"/><path d="M135.2 172.0l1.1 8.6h6.5l1.1 -8.6z" fill="url(#brv)"/><rect x="137.4" y="153.6" width="4.3" height="18.4" fill="url(#cd)"/><circle class="fg" cx="139.5" cy="149.8" r="13.0" fill="url(#gl)" style="animation-delay:-2.59s"/><path class="ff" d="M139.5 144.4C140.6 147.7 142.2 149.8 142.2 151.5A2.7 2.7 0 0 1 136.8 151.5C136.8 149.8 138.5 147.7 139.5 144.4Z" fill="url(#fl)" style="animation-delay:-3.71s"/></g>
+<g opacity="0.63"><path d="M230.6 232.6C238.1 277.2 255.1 277.2 260.5 180.6" fill="none" stroke="url(#br)" stroke-width="3.2" stroke-linecap="round"/><path d="M230.6 232.6c-2.3 -14 3.8 -22 6.1 -10" fill="none" stroke="url(#br)" stroke-width="1.8" stroke-linecap="round"/><circle cx="245.5" cy="278.8" r="2.5" fill="url(#cr)"/><line x1="245.5" y1="271.2" x2="245.5" y2="276.6" stroke="#e8d6a8" stroke-width=".8"/><path d="M251.3 173.6l1.1 3.2-1.1 6.5-1.1-6.5z" fill="url(#pr)" stroke="#fff" stroke-opacity=".35" stroke-width=".4"/><path d="M253.6 173.6l1.1 3.2-1.1 6.5-1.1-6.5z" fill="url(#pr)" stroke="#fff" stroke-opacity=".35" stroke-width=".4"/><path d="M255.9 173.6l1.1 3.2-1.1 6.5-1.1-6.5z" fill="url(#pr)" stroke="#fff" stroke-opacity=".35" stroke-width=".4"/><path d="M258.2 173.6l1.1 3.2-1.1 6.5-1.1-6.5z" fill="url(#pr)" stroke="#fff" stroke-opacity=".35" stroke-width=".4"/><path d="M260.5 173.6l1.1 3.2-1.1 6.5-1.1-6.5z" fill="url(#pr)" stroke="#fff" stroke-opacity=".35" stroke-width=".4"/><path d="M262.8 173.6l1.1 3.2-1.1 6.5-1.1-6.5z" fill="url(#pr)" stroke="#fff" stroke-opacity=".35" stroke-width=".4"/><path d="M265.1 173.6l1.1 3.2-1.1 6.5-1.1-6.5z" fill="url(#pr)" stroke="#fff" stroke-opacity=".35" stroke-width=".4"/><path d="M267.3 173.6l1.1 3.2-1.1 6.5-1.1-6.5z" fill="url(#pr)" stroke="#fff" stroke-opacity=".35" stroke-width=".4"/><path d="M269.6 173.6l1.1 3.2-1.1 6.5-1.1-6.5z" fill="url(#pr)" stroke="#fff" stroke-opacity=".35" stroke-width=".4"/><ellipse cx="260.5" cy="172.0" rx="10.8" ry="2.7" fill="url(#br)"/><path d="M256.1 172.0l1.1 8.6h6.5l1.1 -8.6z" fill="url(#brv)"/><rect x="258.3" y="153.6" width="4.3" height="18.4" fill="url(#cd)"/><circle class="fg" cx="260.5" cy="149.8" r="13.0" fill="url(#gl)" style="animation-delay:-2.59s"/><path class="ff" d="M260.5 144.4C261.5 147.7 263.2 149.8 263.2 151.5A2.7 2.7 0 0 1 257.8 151.5C257.8 149.8 259.4 147.7 260.5 144.4Z" fill="url(#fl)" style="animation-delay:-3.71s"/></g>
+<g opacity="0.74"><path d="M273.9 236.9C291.9 285.9 333.0 285.9 346.0 196.9" fill="none" stroke="url(#br)" stroke-width="4.1" stroke-linecap="round"/><path d="M273.9 236.9c-5.5 -14 9.2 -22 14.8 -10" fill="none" stroke="url(#br)" stroke-width="2.3" stroke-linecap="round"/><circle cx="309.9" cy="289.4" r="3.1" fill="url(#cr)"/><line x1="309.9" y1="279.9" x2="309.9" y2="286.7" stroke="#e8d6a8" stroke-width=".8"/><path d="M334.4 188.1l1.4 4.1-1.4 8.2-1.4-8.2z" fill="url(#pr)" stroke="#fff" stroke-opacity=".35" stroke-width=".4"/><path d="M337.3 188.1l1.4 4.1-1.4 8.2-1.4-8.2z" fill="url(#pr)" stroke="#fff" stroke-opacity=".35" stroke-width=".4"/><path d="M340.2 188.1l1.4 4.1-1.4 8.2-1.4-8.2z" fill="url(#pr)" stroke="#fff" stroke-opacity=".35" stroke-width=".4"/><path d="M343.1 188.1l1.4 4.1-1.4 8.2-1.4-8.2z" fill="url(#pr)" stroke="#fff" stroke-opacity=".35" stroke-width=".4"/><path d="M346.0 188.1l1.4 4.1-1.4 8.2-1.4-8.2z" fill="url(#pr)" stroke="#fff" stroke-opacity=".35" stroke-width=".4"/><path d="M348.9 188.1l1.4 4.1-1.4 8.2-1.4-8.2z" fill="url(#pr)" stroke="#fff" stroke-opacity=".35" stroke-width=".4"/><path d="M351.8 188.1l1.4 4.1-1.4 8.2-1.4-8.2z" fill="url(#pr)" stroke="#fff" stroke-opacity=".35" stroke-width=".4"/><path d="M354.6 188.1l1.4 4.1-1.4 8.2-1.4-8.2z" fill="url(#pr)" stroke="#fff" stroke-opacity=".35" stroke-width=".4"/><path d="M357.5 188.1l1.4 4.1-1.4 8.2-1.4-8.2z" fill="url(#pr)" stroke="#fff" stroke-opacity=".35" stroke-width=".4"/><ellipse cx="346.0" cy="186.1" rx="13.6" ry="3.4" fill="url(#br)"/><path d="M340.5 186.1l1.4 10.9h8.2l1.4 -10.9z" fill="url(#brv)"/><rect x="343.3" y="162.9" width="5.4" height="23.1" fill="url(#cd)"/><circle class="fg" cx="346.0" cy="158.1" r="16.3" fill="url(#gl)" style="animation-delay:-2.59s"/><path class="ff" d="M346.0 151.3C347.3 155.4 349.4 158.1 349.4 160.2A3.4 3.4 0 0 1 342.6 160.2C342.6 158.1 344.6 155.4 346.0 151.3Z" fill="url(#fl)" style="animation-delay:-3.71s"/></g>
+<g opacity="0.74"><path d="M126.1 236.9C108.1 285.9 67.0 285.9 54.0 196.9" fill="none" stroke="url(#br)" stroke-width="4.1" stroke-linecap="round"/><path d="M126.1 236.9c5.5 -14 -9.2 -22 -14.8 -10" fill="none" stroke="url(#br)" stroke-width="2.3" stroke-linecap="round"/><circle cx="90.1" cy="289.4" r="3.1" fill="url(#cr)"/><line x1="90.1" y1="279.9" x2="90.1" y2="286.7" stroke="#e8d6a8" stroke-width=".8"/><path d="M42.5 188.1l1.4 4.1-1.4 8.2-1.4-8.2z" fill="url(#pr)" stroke="#fff" stroke-opacity=".35" stroke-width=".4"/><path d="M45.4 188.1l1.4 4.1-1.4 8.2-1.4-8.2z" fill="url(#pr)" stroke="#fff" stroke-opacity=".35" stroke-width=".4"/><path d="M48.2 188.1l1.4 4.1-1.4 8.2-1.4-8.2z" fill="url(#pr)" stroke="#fff" stroke-opacity=".35" stroke-width=".4"/><path d="M51.1 188.1l1.4 4.1-1.4 8.2-1.4-8.2z" fill="url(#pr)" stroke="#fff" stroke-opacity=".35" stroke-width=".4"/><path d="M54.0 188.1l1.4 4.1-1.4 8.2-1.4-8.2z" fill="url(#pr)" stroke="#fff" stroke-opacity=".35" stroke-width=".4"/><path d="M56.9 188.1l1.4 4.1-1.4 8.2-1.4-8.2z" fill="url(#pr)" stroke="#fff" stroke-opacity=".35" stroke-width=".4"/><path d="M59.8 188.1l1.4 4.1-1.4 8.2-1.4-8.2z" fill="url(#pr)" stroke="#fff" stroke-opacity=".35" stroke-width=".4"/><path d="M62.7 188.1l1.4 4.1-1.4 8.2-1.4-8.2z" fill="url(#pr)" stroke="#fff" stroke-opacity=".35" stroke-width=".4"/><path d="M65.6 188.1l1.4 4.1-1.4 8.2-1.4-8.2z" fill="url(#pr)" stroke="#fff" stroke-opacity=".35" stroke-width=".4"/><ellipse cx="54.0" cy="186.1" rx="13.6" ry="3.4" fill="url(#br)"/><path d="M48.6 186.1l1.4 10.9h8.2l1.4 -10.9z" fill="url(#brv)"/><rect x="51.3" y="162.9" width="5.4" height="23.1" fill="url(#cd)"/><circle class="fg" cx="54.0" cy="158.1" r="16.3" fill="url(#gl)" style="animation-delay:-2.59s"/><path class="ff" d="M54.0 151.3C55.4 155.4 57.4 158.1 57.4 160.2A3.4 3.4 0 0 1 50.6 160.2C50.6 158.1 52.7 155.4 54.0 151.3Z" fill="url(#fl)" style="animation-delay:-3.71s"/></g>
+<ellipse cx="166" cy="178" rx="8.7" ry="2.5" fill="url(#br)"/>
+<path d="M159.2 180.0l1.0 3.1-1.0 5.6-1.0-5.6z" fill="url(#pr)"/>
+<path d="M161.5 180.0l1.0 3.1-1.0 5.6-1.0-5.6z" fill="url(#pr)"/>
+<path d="M163.7 180.0l1.0 3.1-1.0 5.6-1.0-5.6z" fill="url(#pr)"/>
+<path d="M166.0 180.0l1.0 3.1-1.0 5.6-1.0-5.6z" fill="url(#pr)"/>
+<path d="M168.3 180.0l1.0 3.1-1.0 5.6-1.0-5.6z" fill="url(#pr)"/>
+<path d="M170.5 180.0l1.0 3.1-1.0 5.6-1.0-5.6z" fill="url(#pr)"/>
+<path d="M172.8 180.0l1.0 3.1-1.0 5.6-1.0-5.6z" fill="url(#pr)"/>
+<rect x="163.8" y="159.4" width="4.3" height="18.6" fill="url(#cd)"/>
+<circle class="fg" cx="166" cy="155.7" r="12.4" fill="url(#gl)"/>
+<path class="ff" d="M166 150.1C167.2 153.2 168.8 155.7 168.8 157.2A2.8 2.8 0 0 1 163.2 157.2C163.2 155.7 164.8 153.2 166 150.1Z" fill="url(#fl)"/>
+<ellipse cx="234" cy="178" rx="8.7" ry="2.5" fill="url(#br)"/>
+<path d="M227.2 180.0l1.0 3.1-1.0 5.6-1.0-5.6z" fill="url(#pr)"/>
+<path d="M229.5 180.0l1.0 3.1-1.0 5.6-1.0-5.6z" fill="url(#pr)"/>
+<path d="M231.7 180.0l1.0 3.1-1.0 5.6-1.0-5.6z" fill="url(#pr)"/>
+<path d="M234.0 180.0l1.0 3.1-1.0 5.6-1.0-5.6z" fill="url(#pr)"/>
+<path d="M236.3 180.0l1.0 3.1-1.0 5.6-1.0-5.6z" fill="url(#pr)"/>
+<path d="M238.5 180.0l1.0 3.1-1.0 5.6-1.0-5.6z" fill="url(#pr)"/>
+<path d="M240.8 180.0l1.0 3.1-1.0 5.6-1.0-5.6z" fill="url(#pr)"/>
+<rect x="231.8" y="159.4" width="4.3" height="18.6" fill="url(#cd)"/>
+<circle class="fg" cx="234" cy="155.7" r="12.4" fill="url(#gl)"/>
+<path class="ff" d="M234 150.1C235.2 153.2 236.8 155.7 236.8 157.2A2.8 2.8 0 0 1 231.2 157.2C231.2 155.7 232.8 153.2 234 150.1Z" fill="url(#fl)"/>
+<ellipse cx="200" cy="186" rx="11.2" ry="3.2" fill="url(#br)"/>
+<path d="M191.2 188.0l1.3 4.0-1.3 7.2-1.3-7.2z" fill="url(#pr)"/>
+<path d="M194.1 188.0l1.3 4.0-1.3 7.2-1.3-7.2z" fill="url(#pr)"/>
+<path d="M197.1 188.0l1.3 4.0-1.3 7.2-1.3-7.2z" fill="url(#pr)"/>
+<path d="M200.0 188.0l1.3 4.0-1.3 7.2-1.3-7.2z" fill="url(#pr)"/>
+<path d="M202.9 188.0l1.3 4.0-1.3 7.2-1.3-7.2z" fill="url(#pr)"/>
+<path d="M205.9 188.0l1.3 4.0-1.3 7.2-1.3-7.2z" fill="url(#pr)"/>
+<path d="M208.8 188.0l1.3 4.0-1.3 7.2-1.3-7.2z" fill="url(#pr)"/>
+<rect x="197.2" y="162.0" width="5.6" height="24.0" fill="url(#cd)"/>
+<circle class="fg" cx="200" cy="157.2" r="16.0" fill="url(#gl)"/>
+<path class="ff" d="M200 150.0C201.6 154.0 203.6 157.2 203.6 159.2A3.6 3.6 0 0 1 196.4 159.2C196.4 157.2 198.4 154.0 200 150.0Z" fill="url(#fl)"/>
+<path d="M106 234Q200 345 294 234Z" fill="url(#bowl)"/>
+<path d="M108.0 236Q130.0 280.0 200 320" fill="none" stroke="#fffaf0" stroke-opacity=".75" stroke-width="2.6" stroke-linecap="round" stroke-dasharray="0 5"/>
+<path d="M121.1 236Q140.0 282.9 200 320" fill="none" stroke="#fffaf0" stroke-opacity=".75" stroke-width="2.6" stroke-linecap="round" stroke-dasharray="0 5"/>
+<path d="M134.3 236Q150.0 285.7 200 320" fill="none" stroke="#fffaf0" stroke-opacity=".75" stroke-width="2.6" stroke-linecap="round" stroke-dasharray="0 5"/>
+<path d="M147.4 236Q160.0 288.6 200 320" fill="none" stroke="#fffaf0" stroke-opacity=".75" stroke-width="2.6" stroke-linecap="round" stroke-dasharray="0 5"/>
+<path d="M160.6 236Q170.0 291.4 200 320" fill="none" stroke="#fffaf0" stroke-opacity=".75" stroke-width="2.6" stroke-linecap="round" stroke-dasharray="0 5"/>
+<path d="M173.7 236Q180.0 294.3 200 320" fill="none" stroke="#fffaf0" stroke-opacity=".75" stroke-width="2.6" stroke-linecap="round" stroke-dasharray="0 5"/>
+<path d="M186.9 236Q190.0 297.1 200 320" fill="none" stroke="#fffaf0" stroke-opacity=".75" stroke-width="2.6" stroke-linecap="round" stroke-dasharray="0 5"/>
+<path d="M200.0 236Q200.0 300.0 200 320" fill="none" stroke="#fffaf0" stroke-opacity=".75" stroke-width="2.6" stroke-linecap="round" stroke-dasharray="0 5"/>
+<path d="M213.1 236Q210.0 297.1 200 320" fill="none" stroke="#fffaf0" stroke-opacity=".75" stroke-width="2.6" stroke-linecap="round" stroke-dasharray="0 5"/>
+<path d="M226.3 236Q220.0 294.3 200 320" fill="none" stroke="#fffaf0" stroke-opacity=".75" stroke-width="2.6" stroke-linecap="round" stroke-dasharray="0 5"/>
+<path d="M239.4 236Q230.0 291.4 200 320" fill="none" stroke="#fffaf0" stroke-opacity=".75" stroke-width="2.6" stroke-linecap="round" stroke-dasharray="0 5"/>
+<path d="M252.6 236Q240.0 288.6 200 320" fill="none" stroke="#fffaf0" stroke-opacity=".75" stroke-width="2.6" stroke-linecap="round" stroke-dasharray="0 5"/>
+<path d="M265.7 236Q250.0 285.7 200 320" fill="none" stroke="#fffaf0" stroke-opacity=".75" stroke-width="2.6" stroke-linecap="round" stroke-dasharray="0 5"/>
+<path d="M278.9 236Q260.0 282.9 200 320" fill="none" stroke="#fffaf0" stroke-opacity=".75" stroke-width="2.6" stroke-linecap="round" stroke-dasharray="0 5"/>
+<path d="M292.0 236Q270.0 280.0 200 320" fill="none" stroke="#fffaf0" stroke-opacity=".75" stroke-width="2.6" stroke-linecap="round" stroke-dasharray="0 5"/>
+<ellipse cx="200" cy="262" rx="80" ry="7.2" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="1.6" stroke-linecap="round" stroke-dasharray="0 4"/>
+<ellipse cx="200" cy="284" rx="60" ry="5.4" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="1.6" stroke-linecap="round" stroke-dasharray="0 4"/>
+<ellipse cx="200" cy="234" rx="95" ry="12" fill="none" stroke="url(#br)" stroke-width="6"/>
+<ellipse cx="200" cy="231" rx="95" ry="12" fill="none" stroke="#fff3c2" stroke-opacity=".45" stroke-width="1.2"/>
+<path d="M112.0 238.0c-3-5 0-9 0-11 0 2 3 6 0 11z" fill="url(#br)"/>
+<path d="M128.0 239.7c-3-5 0-9 0-11 0 2 3 6 0 11z" fill="url(#br)"/>
+<path d="M144.0 241.2c-3-5 0-9 0-11 0 2 3 6 0 11z" fill="url(#br)"/>
+<path d="M160.0 242.5c-3-5 0-9 0-11 0 2 3 6 0 11z" fill="url(#br)"/>
+<path d="M176.0 243.5c-3-5 0-9 0-11 0 2 3 6 0 11z" fill="url(#br)"/>
+<path d="M192.0 243.9c-3-5 0-9 0-11 0 2 3 6 0 11z" fill="url(#br)"/>
+<path d="M208.0 243.9c-3-5 0-9 0-11 0 2 3 6 0 11z" fill="url(#br)"/>
+<path d="M224.0 243.5c-3-5 0-9 0-11 0 2 3 6 0 11z" fill="url(#br)"/>
+<path d="M240.0 242.5c-3-5 0-9 0-11 0 2 3 6 0 11z" fill="url(#br)"/>
+<path d="M256.0 241.2c-3-5 0-9 0-11 0 2 3 6 0 11z" fill="url(#br)"/>
+<path d="M272.0 239.7c-3-5 0-9 0-11 0 2 3 6 0 11z" fill="url(#br)"/>
+<path d="M288.0 238.0c-3-5 0-9 0-11 0 2 3 6 0 11z" fill="url(#br)"/>
+<g opacity="0.88"><path d="M273.9 243.1C291.9 298.1 333.0 298.1 346.0 220.0" fill="none" stroke="url(#br)" stroke-width="5.3" stroke-linecap="round"/><path d="M273.9 243.1c-5.5 -14 9.2 -22 14.8 -10" fill="none" stroke="url(#br)" stroke-width="3.0" stroke-linecap="round"/><circle cx="309.9" cy="304.4" r="4.0" fill="url(#cr)"/><line x1="309.9" y1="292.1" x2="309.9" y2="300.9" stroke="#e8d6a8" stroke-width=".8"/><path d="M331.0 208.6l1.8 5.3-1.8 10.6-1.8-10.6z" fill="url(#pr)" stroke="#fff" stroke-opacity=".35" stroke-width=".4"/><path d="M334.8 208.6l1.8 5.3-1.8 10.6-1.8-10.6z" fill="url(#pr)" stroke="#fff" stroke-opacity=".35" stroke-width=".4"/><path d="M338.5 208.6l1.8 5.3-1.8 10.6-1.8-10.6z" fill="url(#pr)" stroke="#fff" stroke-opacity=".35" stroke-width=".4"/><path d="M342.2 208.6l1.8 5.3-1.8 10.6-1.8-10.6z" fill="url(#pr)" stroke="#fff" stroke-opacity=".35" stroke-width=".4"/><path d="M346.0 208.6l1.8 5.3-1.8 10.6-1.8-10.6z" fill="url(#pr)" stroke="#fff" stroke-opacity=".35" stroke-width=".4"/><path d="M349.7 208.6l1.8 5.3-1.8 10.6-1.8-10.6z" fill="url(#pr)" stroke="#fff" stroke-opacity=".35" stroke-width=".4"/><path d="M353.4 208.6l1.8 5.3-1.8 10.6-1.8-10.6z" fill="url(#pr)" stroke="#fff" stroke-opacity=".35" stroke-width=".4"/><path d="M357.2 208.6l1.8 5.3-1.8 10.6-1.8-10.6z" fill="url(#pr)" stroke="#fff" stroke-opacity=".35" stroke-width=".4"/><path d="M360.9 208.6l1.8 5.3-1.8 10.6-1.8-10.6z" fill="url(#pr)" stroke="#fff" stroke-opacity=".35" stroke-width=".4"/><ellipse cx="346.0" cy="205.9" rx="17.6" ry="4.4" fill="url(#br)"/><path d="M338.9 205.9l1.8 14.1h10.6l1.8 -14.1z" fill="url(#brv)"/><rect x="342.5" y="176.0" width="7.0" height="29.9" fill="url(#cd)"/><circle class="fg" cx="346.0" cy="169.9" r="21.1" fill="url(#gl)" style="animation-delay:-2.59s"/><path class="ff" d="M346.0 161.1C347.7 166.4 350.4 169.9 350.4 172.5A4.4 4.4 0 0 1 341.6 172.5C341.6 169.9 344.2 166.4 346.0 161.1Z" fill="url(#fl)" style="animation-delay:-3.71s"/></g>
+<g opacity="0.88"><path d="M126.1 243.1C108.1 298.1 67.0 298.1 54.0 220.0" fill="none" stroke="url(#br)" stroke-width="5.3" stroke-linecap="round"/><path d="M126.1 243.1c5.5 -14 -9.2 -22 -14.8 -10" fill="none" stroke="url(#br)" stroke-width="3.0" stroke-linecap="round"/><circle cx="90.1" cy="304.4" r="4.0" fill="url(#cr)"/><line x1="90.1" y1="292.1" x2="90.1" y2="300.9" stroke="#e8d6a8" stroke-width=".8"/><path d="M39.1 208.6l1.8 5.3-1.8 10.6-1.8-10.6z" fill="url(#pr)" stroke="#fff" stroke-opacity=".35" stroke-width=".4"/><path d="M42.8 208.6l1.8 5.3-1.8 10.6-1.8-10.6z" fill="url(#pr)" stroke="#fff" stroke-opacity=".35" stroke-width=".4"/><path d="M46.6 208.6l1.8 5.3-1.8 10.6-1.8-10.6z" fill="url(#pr)" stroke="#fff" stroke-opacity=".35" stroke-width=".4"/><path d="M50.3 208.6l1.8 5.3-1.8 10.6-1.8-10.6z" fill="url(#pr)" stroke="#fff" stroke-opacity=".35" stroke-width=".4"/><path d="M54.0 208.6l1.8 5.3-1.8 10.6-1.8-10.6z" fill="url(#pr)" stroke="#fff" stroke-opacity=".35" stroke-width=".4"/><path d="M57.8 208.6l1.8 5.3-1.8 10.6-1.8-10.6z" fill="url(#pr)" stroke="#fff" stroke-opacity=".35" stroke-width=".4"/><path d="M61.5 208.6l1.8 5.3-1.8 10.6-1.8-10.6z" fill="url(#pr)" stroke="#fff" stroke-opacity=".35" stroke-width=".4"/><path d="M65.2 208.6l1.8 5.3-1.8 10.6-1.8-10.6z" fill="url(#pr)" stroke="#fff" stroke-opacity=".35" stroke-width=".4"/><path d="M69.0 208.6l1.8 5.3-1.8 10.6-1.8-10.6z" fill="url(#pr)" stroke="#fff" stroke-opacity=".35" stroke-width=".4"/><ellipse cx="54.0" cy="205.9" rx="17.6" ry="4.4" fill="url(#br)"/><path d="M47.0 205.9l1.8 14.1h10.6l1.8 -14.1z" fill="url(#brv)"/><rect x="50.5" y="176.0" width="7.0" height="29.9" fill="url(#cd)"/><circle class="fg" cx="54.0" cy="169.9" r="21.1" fill="url(#gl)" style="animation-delay:-2.59s"/><path class="ff" d="M54.0 161.1C55.8 166.4 58.4 169.9 58.4 172.5A4.4 4.4 0 0 1 49.6 172.5C49.6 169.9 52.3 166.4 54.0 161.1Z" fill="url(#fl)" style="animation-delay:-3.71s"/></g>
+<g opacity="0.99"><path d="M230.6 247.4C238.1 306.8 255.1 306.8 260.5 236.3" fill="none" stroke="url(#br)" stroke-width="6.1" stroke-linecap="round"/><path d="M230.6 247.4c-2.3 -14 3.8 -22 6.1 -10" fill="none" stroke="url(#br)" stroke-width="3.5" stroke-linecap="round"/><circle cx="245.5" cy="315.1" r="4.7" fill="url(#cr)"/><line x1="245.5" y1="300.8" x2="245.5" y2="311.0" stroke="#e8d6a8" stroke-width=".8"/><path d="M243.1 223.1l2.0 6.1-2.0 12.2-2.0-12.2z" fill="url(#pr)" stroke="#fff" stroke-opacity=".35" stroke-width=".4"/><path d="M247.5 223.1l2.0 6.1-2.0 12.2-2.0-12.2z" fill="url(#pr)" stroke="#fff" stroke-opacity=".35" stroke-width=".4"/><path d="M251.8 223.1l2.0 6.1-2.0 12.2-2.0-12.2z" fill="url(#pr)" stroke="#fff" stroke-opacity=".35" stroke-width=".4"/><path d="M256.1 223.1l2.0 6.1-2.0 12.2-2.0-12.2z" fill="url(#pr)" stroke="#fff" stroke-opacity=".35" stroke-width=".4"/><path d="M260.5 223.1l2.0 6.1-2.0 12.2-2.0-12.2z" fill="url(#pr)" stroke="#fff" stroke-opacity=".35" stroke-width=".4"/><path d="M264.8 223.1l2.0 6.1-2.0 12.2-2.0-12.2z" fill="url(#pr)" stroke="#fff" stroke-opacity=".35" stroke-width=".4"/><path d="M269.1 223.1l2.0 6.1-2.0 12.2-2.0-12.2z" fill="url(#pr)" stroke="#fff" stroke-opacity=".35" stroke-width=".4"/><path d="M273.5 223.1l2.0 6.1-2.0 12.2-2.0-12.2z" fill="url(#pr)" stroke="#fff" stroke-opacity=".35" stroke-width=".4"/><path d="M277.8 223.1l2.0 6.1-2.0 12.2-2.0-12.2z" fill="url(#pr)" stroke="#fff" stroke-opacity=".35" stroke-width=".4"/><ellipse cx="260.5" cy="220.0" rx="20.4" ry="5.1" fill="url(#br)"/><path d="M252.3 220.0l2.0 16.3h12.2l2.0 -16.3z" fill="url(#brv)"/><rect x="256.4" y="185.3" width="8.2" height="34.7" fill="url(#cd)"/><circle class="fg" cx="260.5" cy="178.2" r="24.5" fill="url(#gl)" style="animation-delay:-2.59s"/><path class="ff" d="M260.5 168.0C262.5 174.1 265.6 178.2 265.6 181.3A5.1 5.1 0 0 1 255.4 181.3C255.4 178.2 258.4 174.1 260.5 168.0Z" fill="url(#fl)" style="animation-delay:-3.71s"/></g>
+<g opacity="0.99"><path d="M169.4 247.4C161.9 306.8 144.9 306.8 139.5 236.3" fill="none" stroke="url(#br)" stroke-width="6.1" stroke-linecap="round"/><path d="M169.4 247.4c2.3 -14 -3.8 -22 -6.1 -10" fill="none" stroke="url(#br)" stroke-width="3.5" stroke-linecap="round"/><circle cx="154.5" cy="315.1" r="4.7" fill="url(#cr)"/><line x1="154.5" y1="300.8" x2="154.5" y2="311.0" stroke="#e8d6a8" stroke-width=".8"/><path d="M122.2 223.1l2.0 6.1-2.0 12.2-2.0-12.2z" fill="url(#pr)" stroke="#fff" stroke-opacity=".35" stroke-width=".4"/><path d="M126.5 223.1l2.0 6.1-2.0 12.2-2.0-12.2z" fill="url(#pr)" stroke="#fff" stroke-opacity=".35" stroke-width=".4"/><path d="M130.9 223.1l2.0 6.1-2.0 12.2-2.0-12.2z" fill="url(#pr)" stroke="#fff" stroke-opacity=".35" stroke-width=".4"/><path d="M135.2 223.1l2.0 6.1-2.0 12.2-2.0-12.2z" fill="url(#pr)" stroke="#fff" stroke-opacity=".35" stroke-width=".4"/><path d="M139.5 223.1l2.0 6.1-2.0 12.2-2.0-12.2z" fill="url(#pr)" stroke="#fff" stroke-opacity=".35" stroke-width=".4"/><path d="M143.9 223.1l2.0 6.1-2.0 12.2-2.0-12.2z" fill="url(#pr)" stroke="#fff" stroke-opacity=".35" stroke-width=".4"/><path d="M148.2 223.1l2.0 6.1-2.0 12.2-2.0-12.2z" fill="url(#pr)" stroke="#fff" stroke-opacity=".35" stroke-width=".4"/><path d="M152.5 223.1l2.0 6.1-2.0 12.2-2.0-12.2z" fill="url(#pr)" stroke="#fff" stroke-opacity=".35" stroke-width=".4"/><path d="M156.9 223.1l2.0 6.1-2.0 12.2-2.0-12.2z" fill="url(#pr)" stroke="#fff" stroke-opacity=".35" stroke-width=".4"/><ellipse cx="139.5" cy="220.0" rx="20.4" ry="5.1" fill="url(#br)"/><path d="M131.4 220.0l2.0 16.3h12.2l2.0 -16.3z" fill="url(#brv)"/><rect x="135.5" y="185.3" width="8.2" height="34.7" fill="url(#cd)"/><circle class="fg" cx="139.5" cy="178.2" r="24.5" fill="url(#gl)" style="animation-delay:-2.59s"/><path class="ff" d="M139.5 168.0C141.6 174.1 144.6 178.2 144.6 181.3A5.1 5.1 0 0 1 134.4 181.3C134.4 178.2 137.5 174.1 139.5 168.0Z" fill="url(#fl)" style="animation-delay:-3.71s"/></g>
+<path d="M190 318q10-10 20 0l-4 12h-12z" fill="url(#brv)"/>
+<path d="M192 330l3 8-3 14-3-14z" fill="url(#pr)" stroke="#fff" stroke-opacity=".4" stroke-width=".4"/>
+<path d="M200 330l3 8-3 14-3-14z" fill="url(#pr)" stroke="#fff" stroke-opacity=".4" stroke-width=".4"/>
+<path d="M208 330l3 8-3 14-3-14z" fill="url(#pr)" stroke="#fff" stroke-opacity=".4" stroke-width=".4"/>
+<circle cx="200" cy="360" r="7" fill="url(#cr)"/><circle cx="198" cy="357" r="2" fill="#fff"/>
+</svg>
+ </div>
+ <div class="htitle" id="htitle">
+  <h1>Clases de Pintura</h1>
+  <p>con la maestra Laura Herrera</p>
+ </div>
+ <div class="spot" id="spotHero" aria-hidden="true"></div>
+ <div class="stage3d" id="stage" tabindex="0" role="group" aria-roledescription="carrusel" aria-label="Galería de cuadros de Laura Herrera"><div class="ring" id="ring"></div></div>
+ <div class="hfoot" id="hfoot">
+  <p>Clases para adultos, desde tu primer trazo hasta tu propia obra.</p>
+  <div class="btns"><a class="btn" href="#inscripcion">Quiero inscribirme</a><a class="btn ghost" href="#metodo">Recorrer la galería</a></div>
+  <p class="now" id="now" aria-live="polite"></p>
+  <span class="hint">Arrastra, usa las flechas del teclado o toca un cuadro para girar la galería</span>
+ </div>
+</header>
+
+<main>
+<section class="show" id="metodo">
+ <div class="pin" id="pin">
+  <div class="glow"></div>
+  <div class="spot" id="spotShow" aria-hidden="true" style="--ss:240px"></div>
+  <div class="bigword" id="bigword">OBSERVAR</div>
+  <div class="frame3d"><div class="card" id="card">
+   <img class="sizer" src="obra.webp" alt="">
+   <img data-k="abrazo" loading="lazy" decoding="async" src="abrazo.webp" alt="Detalle del cuadro: la pareja abrazada en el columpio">
+   <img data-k="bosque" loading="lazy" decoding="async" src="bosque.webp" alt="Detalle del cuadro: el follaje del bosque">
+   <img data-k="velo" loading="lazy" decoding="async" src="velo.webp" alt="Detalle del cuadro: el velo de seda">
+   <img data-k="obra" loading="lazy" decoding="async" src="obra.webp" alt="El cuadro completo de Laura Herrera en su marco dorado">
+  </div></div>
+  <div class="info" id="info">
+   <div class="item"><span class="badge">Paso I</span><h3>Observar</h3><p>Antes de pintar aprendemos a mirar: dónde cae la luz, qué colores viven en la sombra y cómo se abrazan las formas.</p><small>Detalle · el abrazo</small></div>
+   <div class="item"><span class="badge">Paso II</span><h3>Dibujar</h3><p>Encajamos la composición con trazos sencillos: proporciones, gestos y el lugar de cada figura en el lienzo.</p><small>Detalle · el bosque</small></div>
+   <div class="item"><span class="badge">Paso III</span><h3>Pintar</h3><p>Construimos la obra capa por capa, de las manchas generales al brillo de una tela transparente.</p><small>Detalle · el velo</small></div>
+   <div class="item"><span class="badge">Paso IV</span><h3>Terminar</h3><p>Repasamos, corregimos con calma y te llevas a casa un cuadro hecho por ti, listo para enmarcar.</p><small>Óleo sobre tela · Laura Herrera</small><div style="margin-top:18px"><a class="btn" href="#inscripcion">Empezar mi primer cuadro</a></div></div>
+  </div>
+  <div class="rail" id="rail"><button aria-label="Paso I"></button><button aria-label="Paso II"></button><button aria-label="Paso III"></button><button aria-label="Paso IV"></button></div>
+ </div>
+</section>
+
+<section class="band" id="clases">
+ <div class="wrap">
+  <h2 class="rv">Elige tu punto de partida</h2>
+  <p class="lead rv">Al inscribirte, Laura revisa contigo tu experiencia. Si nunca has pintado, empiezas en el primer nivel y no te saltas nada.</p>
+  <div class="levels">
+   <article class="level star rv"><span class="badge" style="align-self:flex-start">Ideal para empezar</span><h3>Desde cero</h3><p>Para quien nunca ha pintado o no lo hace desde la escuela.</p>
+    <ul><li>Materiales, pinceles y lienzos</li><li>Dibujo básico: forma y proporción</li><li>Teoría del color y mezclas</li><li>Tu primer cuadro terminado</li></ul>
+    <a class="btn" href="#inscripcion" data-level="Desde cero">Inscribirme en este nivel</a></article>
+   <article class="level rv" style="--d:.12s"><h3>Intermedio</h3><p>Ya conoces lo básico y quieres pintar con más soltura.</p>
+    <ul><li>Luz, sombra y volumen</li><li>Composición y encuadre</li><li>Paisaje, bodegón y figura</li><li>Capas, veladuras y texturas</li></ul>
+    <a class="btn ghost" href="#inscripcion" data-level="Intermedio">Inscribirme en este nivel</a></article>
+   <article class="level rv" style="--d:.24s"><h3>Avanzado</h3><p>Para perfeccionar la técnica y encontrar tu estilo.</p>
+    <ul><li>Óleo con técnicas clásicas</li><li>Estudio de obras de los maestros</li><li>Retrato y figura humana</li><li>Proyecto personal guiado</li></ul>
+    <a class="btn ghost" href="#inscripcion" data-level="Avanzado">Inscribirme en este nivel</a></article>
+  </div>
+  <p class="adults rv"><b>Clases exclusivas para adultos.</b> Todos los grupos son para personas de 18 años en adelante, sin límite de edad.</p>
+ </div>
+</section>
+
+<section class="band" id="horarios" style="background:var(--deep)">
+ <div class="wrap rv">
+  <h2>Horarios</h2>
+  <table class="sched">
+   <thead><tr><th>Grupo</th><th>Días</th><th>Hora</th><th>Para quién</th></tr></thead>
+   <tbody>
+    <tr><td>Desde cero</td><td>Martes y jueves</td><td>10:00 – 12:00</td><td>Principiantes sin experiencia</td></tr>
+    <tr><td>Desde cero</td><td>Martes y jueves</td><td>18:00 – 20:00</td><td>Principiantes que trabajan de día</td></tr>
+    <tr><td>Intermedio</td><td>Lunes y miércoles</td><td>17:00 – 19:00</td><td>Con bases de dibujo y color</td></tr>
+    <tr><td>Avanzado</td><td>Sábado</td><td>10:00 – 14:00</td><td>Técnica al óleo y proyecto personal</td></tr>
+   </tbody>
+  </table>
+  <p class="note">Horarios de ejemplo: Laura confirma días, horas y cupos al recibir tu solicitud.</p>
+ </div>
+</section>
+
+<section class="band enroll" id="inscripcion">
+ <div class="wrap">
+  <aside class="rv">
+   <h2>Inscríbete a las clases</h2>
+   <p>Déjanos tus datos y cuéntanos tu experiencia. Si nunca has pintado, para eso existe el nivel desde cero.</p>
+   <ol><li>Llena el formulario.</li><li>Laura te contacta para confirmar grupo y horario.</li><li>Recibes la lista de materiales y ¡a pintar!</li></ol>
+  </aside>
+  <div class="rv" style="--d:.15s">
+   <form id="form" name="inscripcion" method="POST" data-netlify="true" data-netlify-subject="Nueva inscripción a clases de pintura" netlify-honeypot="bot-field" novalidate>
+    <input type="hidden" name="form-name" value="inscripcion">
+    <p hidden><label>No llenar: <input name="bot-field"></label></p>
+    <div class="summary" id="summary" role="alert" tabindex="-1" hidden><b>Revisa estos datos:</b><ul id="sumList"></ul></div>
+    <div class="row">
+     <div class="f"><label for="nombre">Nombre completo</label><input id="nombre" name="nombre" aria-describedby="e-nombre" type="text" autocomplete="name"><div class="err" id="e-nombre">Escribe tu nombre.</div></div>
+     <div class="f"><label for="tel">Teléfono / WhatsApp</label><input id="tel" name="telefono" aria-describedby="e-tel" type="tel" autocomplete="tel"><div class="err" id="e-tel">Escribe un teléfono de contacto.</div></div>
+    </div>
+    <div class="f"><label for="email">Correo electrónico</label><input id="email" name="email" aria-describedby="e-email" type="email" autocomplete="email"><div class="err" id="e-email">Escribe un correo válido.</div></div>
+    <div class="f" id="f-nivel"><span class="lbl">¿Cuál es tu experiencia?</span>
+     <div class="choices" role="radiogroup">
+      <label><input type="radio" id="nivel1" name="nivel" value="Desde cero">Nunca he pintado</label>
+      <label><input type="radio" name="nivel" value="Intermedio">Tengo algo de experiencia</label>
+      <label><input type="radio" name="nivel" value="Avanzado">Pinto con frecuencia</label>
+     </div><div class="err">Elige una opción.</div></div>
+    <div class="row">
+     <div class="f"><label for="horario">Horario preferido</label><select id="horario" name="horario"><option>Mañana</option><option>Tarde</option><option>Noche</option><option>Sábado</option><option>Me adapto</option></select></div>
+     <div class="f"><label for="tecnica">Técnica que te interesa</label><select id="tecnica" name="tecnica"><option>Aún no lo sé</option><option>Óleo</option><option>Acrílico</option><option>Acuarela</option><option>Dibujo</option></select></div>
+    </div>
+    <div class="f"><label for="msg">¿Algo que quieras contarle a Laura? (opcional)</label><textarea id="msg" name="mensaje"></textarea></div>
+    <div class="f" id="f-edad"><label class="check"><input type="checkbox" id="edad" name="mayor_de_18" value="si">Confirmo que soy mayor de 18 años.</label><div class="err">Las clases son solo para adultos.</div></div>
+    <button class="btn wa" type="submit" id="sendBtn"><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm4.5 12.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 2s.8 2.3.9 2.5c.1.2 1.6 2.5 4 3.5 1.5.6 2.1.7 2.8.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.1-1.2-.1-.1-.2-.2-.4-.3Z"/></svg>Enviar solicitud por WhatsApp</button>
+    
+   </form>
+   <div class="done" id="done" role="status" tabindex="-1">
+    <h3>¡Gracias, <span id="dName"></span>!</h3>
+    <p style="color:var(--soft)">Se abrió WhatsApp con tu solicitud lista: solo dale enviar. Laura te contestará para confirmar tu grupo y horario.</p>
+    <dl id="dList"></dl>
+    <a class="btn wa" id="waBtn" href="#" target="_blank" rel="noopener" hidden><svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2c-1.6 0-3.1-.4-4.4-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 2s.8 2.3.9 2.5c.1.2 1.6 2.5 4 3.5 1.5.6 2.1.7 2.8.6.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.1-1.2-.1-.1-.2-.2-.4-.3Z"/></svg>Abrir WhatsApp de nuevo</a>
+    <p class="waNote" id="waNote" hidden>¿No se abrió WhatsApp? Toca el botón verde; el mensaje ya va escrito.</p>
+    <button class="btn ghost" type="button" id="again">Corregir datos</button>
+   </div>
+  </div>
+ </div>
+</section>
+
+<section class="band teacher" id="maestra">
+ <div class="wrap">
+  <figure class="portrait rv">
+   <div class="pframe"><img src="laura-retrato.webp" width="720" height="900" loading="lazy" decoding="async" alt="Retrato de la maestra Laura Herrera sonriendo"></div>
+   <figcaption>Laura Herrera · Maestra de pintura</figcaption>
+  </figure>
+  <div class="txt rv" style="--d:.15s">
+   <h2>Laura Herrera</h2>
+   <blockquote class="quote">Todos llevamos un pintor dentro; mi trabajo es ayudarte a encontrarlo, pincelada a pincelada.</blockquote>
+   <p>Enseño pintura a adultos que quieren darse un espacio para crear. Muchos de mis alumnos llegan sin haber tomado nunca un pincel; otros vienen a perfeccionar su técnica. Con todos sigo el mismo principio: avanzar a tu ritmo, con bases sólidas y mucha práctica guiada.</p>
+   <div class="facts">
+    <div><b>Solo adultos</b><span>De 18 años en adelante</span></div>
+    <div><b>Desde cero</b><span>Sin experiencia previa</span></div>
+    <div><b>Grupos pequeños</b><span>Atención personal</span></div>
+   </div>
+  </div>
+ </div>
+</section>
+
+<section class="band" id="preguntas" style="background:var(--night)">
+ <div class="wrap rv">
+  <h2>Preguntas frecuentes</h2>
+  <details><summary>Nunca he pintado, ¿puedo inscribirme?</summary><p>Sí. El nivel desde cero está pensado para ti: empezamos por conocer los materiales y hacer trazos sencillos, y en pocas semanas terminarás tu primer cuadro.</p></details>
+  <details><summary>¿Hay edad mínima o máxima?</summary><p>Las clases son solo para adultos, a partir de 18 años. No hay edad máxima: nunca es tarde para empezar a pintar.</p></details>
+  <details><summary>¿Necesito llevar materiales?</summary><p>Al confirmar tu inscripción recibirás una lista de materiales básicos según tu nivel y técnica.</p></details>
+  <details><summary>¿Puedo cambiar de nivel después?</summary><p>Claro. Cuando Laura vea que dominas lo básico, te recomendará pasar al siguiente nivel.</p></details>
+ </div>
+</section>
+</main>
+
+<section class="band finale">
+ <div class="wrap rv">
+  <p class="fsig">Tu primer cuadro te espera</p>
+  <h2>Inscríbete hoy y empieza desde cero</h2>
+  <p>Grupos pequeños, solo para adultos, a tu ritmo.</p>
+  <a class="btn" href="#inscripcion">Quiero inscribirme</a>
+ </div>
+</section>
+<footer><div class="sig">Laura Herrera</div><p>Clases de pintura para adultos · Desde cero hasta avanzado</p></footer>
+
+<script>
+{
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const still=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const fine=matchMedia('(hover:hover) and (pointer:fine)').matches;
+const clamp=(v,a=0,b=1)=>Math.min(b,Math.max(a,v));
+
+/* ---------- carrusel 3D de la portada ---------- */
+const works=[
+ {k:'obra',t:'El columpio · óleo'},{k:'globos',t:'Retrato en globo · óleo'},{k:'claustro',t:'Claustro con jardín · óleo'},
+ {k:'peonias',t:'Peonías · óleo'},{k:'canastas',t:'Canastas y bordados · óleo'},{k:'farol',t:'Farol bajo la lluvia · óleo con espátula'}
+];
+const tilts=[-6,8,-10,5,9,-7];
+const ring=$('#ring');
+ring.innerHTML=works.map((w,i)=>`<button class="piece" style="--dl:${-i*.7}s" aria-label="${w.t}"><span class="c"><img src="${w.k}.webp" alt="${w.t}"></span></button>`).join('');
+const pieces=$$('.piece'),N=pieces.length;
+let rot=0,target=0,vel=0,drag=null,heroOn=true,hover=false;
+const step=2*Math.PI/N,now=$('#now');let front=-1;
+function layoutRing(){
+ const W=innerWidth,R=Math.min(560,W*.42),pw=W<600?W*.23:Math.max(110,Math.min(190,W*.13));
+ ring.style.setProperty('--R',R);document.documentElement.style.setProperty('--ph',(pw*1.3)+'px');
+ return R;
+}
+let R=layoutRing();
+function drawRing(scrollP){
+ pieces.forEach((el,i)=>{
+  const a=rot+i*2*Math.PI/N,x=Math.sin(a)*R,z=Math.cos(a)*R*.55,depth=(Math.cos(a)+1)/2;
+  const y=-scrollP*120*(1-depth);
+  el.style.transform=`translate3d(${x}px,${y}px,${z}px) rotateY(${-Math.sin(a)*35}deg) rotateZ(${tilts[i]*(1-depth*.6)}deg) scale(${.72+depth*.5})`;
+  el.style.filter=`brightness(${.35+depth*.75})`;
+  el.style.zIndex=Math.round(depth*100);
+  el.tabIndex=depth>.97?0:-1;
+ });
+ let f=Math.round(((-rot/step)%N+N)%N)%N;if(f!==front){front=f;now.textContent=works[f].t}
+}
+pieces.forEach((el,i)=>el.addEventListener('click',()=>{
+ const step=2*Math.PI/N;let d=(-i*step-target)%(2*Math.PI);
+ if(d>Math.PI)d-=2*Math.PI;if(d<-Math.PI)d+=2*Math.PI;target+=d;
+}));
+const stage=$('#stage');
+stage.addEventListener('pointerdown',e=>{drag={x:e.clientX,t:target};});
+stage.addEventListener('pointerenter',()=>hover=true);
+if(fine&&!still)$('#inicio').addEventListener('pointermove',e=>{stage.style.perspectiveOrigin=`${30+40*e.clientX/innerWidth}% ${20+20*e.clientY/innerHeight}%`});stage.addEventListener('pointerleave',()=>hover=false);
+stage.addEventListener('keydown',e=>{if(e.key==='ArrowRight'){target-=step;e.preventDefault()}if(e.key==='ArrowLeft'){target+=step;e.preventDefault()}});
+new IntersectionObserver(es=>{heroOn=es[0].isIntersecting}).observe($('#inicio'));
+addEventListener('pointermove',e=>{if(drag){target=drag.t+(e.clientX-drag.x)*.006}});
+addEventListener('pointerup',()=>drag=null);
+
+/* ---------- foco que sigue al mouse + inclinación 3D ---------- */
+const spots=[[$('#inicio'),$('#spotHero')],[$('#pin'),$('#spotShow')]].map(([host,el])=>({host,el,x:0,y:0,tx:0,ty:0,in:false}));
+let tiltX=0,tiltY=0,tTX=0,tTY=0;
+if(fine&&!still){
+ spots.forEach(sp=>{
+  sp.host.addEventListener('pointermove',e=>{const r=sp.host.getBoundingClientRect();sp.tx=e.clientX-r.left;sp.ty=e.clientY-r.top;
+   if(!sp.in){sp.x=sp.tx;sp.y=sp.ty}sp.in=true;sp.el.classList.add('on');
+   if(sp.el.id==='spotShow'){tTY=((e.clientX-r.left)/r.width-.5)*16;tTX=-((e.clientY-r.top)/r.height-.5)*12}});
+  sp.host.addEventListener('pointerleave',()=>{sp.in=false;sp.el.classList.remove('on');if(sp.el.id==='spotShow'){tTX=0;tTY=0}});
+ });
+}
+function springs(){
+ spots.forEach(sp=>{if(!sp.in)return;sp.x+=(sp.tx-sp.x)*.14;sp.y+=(sp.ty-sp.y)*.14;
+  const half=sp.el.offsetWidth/2;sp.el.style.transform=`translate(${sp.x-half}px,${sp.y-half}px)`});
+ tiltX+=(tTX-tiltX)*.08;tiltY+=(tTY-tiltY)*.08;
+}
+
+/* ---------- escenas fijas ---------- */
+const show=$('#metodo'),pin=$('#pin'),card=$('#card'),big=$('#bigword');
+const scenes=[
+ {k:'abrazo',w:'OBSERVAR',c:'#6e1c0d'},
+ {k:'bosque',w:'DIBUJAR',c:'#173322'},
+ {k:'velo',w:'PINTAR',c:'#5a3f12'},
+ {k:'obra',w:'TERMINAR',c:'#0a1a35'}
+];
+const imgs=$$('#card img[data-k]'),items=$$('#info .item'),dots=$$('#rail button');
+let cur=-1;
+function setScene(i){
+ if(i===cur)return;cur=i;const s=scenes[i];
+ pin.style.setProperty('--sc',s.c);big.textContent=s.w;
+ imgs.forEach(im=>im.classList.toggle('on',im.dataset.k===s.k));
+ items.forEach((el,j)=>el.classList.toggle('on',j===i));
+ dots.forEach((d,j)=>d.classList.toggle('on',j===i));
+}
+dots.forEach((d,i)=>d.addEventListener('click',()=>{
+ const total=show.offsetHeight-innerHeight;
+ scrollTo({top:show.offsetTop+total*((i+.5)/scenes.length),behavior:still?'auto':'smooth'});
+}));
+setScene(0);
+
+/* ---------- aparición y navegación ---------- */
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12});
+$$('.rv').forEach(el=>io.observe(el));
+const links=$$('nav ul a'),secs=links.map(a=>$(a.getAttribute('href')));
+const bar=$('#bar'),nav=$('#nav'),ht=$('#htitle'),hf=$('#hfoot');
+
+function tick(){
+ const y=scrollY,H=innerHeight,doc=document.documentElement.scrollHeight-H;
+ bar.style.transform=`scaleX(${doc>0?y/doc:0})`;
+ nav.classList.toggle('solid',y>H*.5);
+ let c=-1;secs.forEach((s,i)=>{if(s&&s.getBoundingClientRect().top<H*.4)c=i});
+ links.forEach((a,i)=>a.classList.toggle('on',i===c));
+
+ const hp=clamp(y/H);
+ if(!still){
+  if(!drag&&!hover&&heroOn&&document.activeElement!==stage)target+=.0016;
+  rot+=(target-rot)*.07;
+  ht.style.transform=`translateY(${-y*.35}px)`;ht.style.opacity=1-hp*1.5;
+  hf.style.opacity=1-hp*2.2;
+  stage.style.transform=`translateY(${y*.25}px) scale(${1+hp*.25})`;
+ } else rot+=(target-rot);
+ if(hp<1&&heroOn)drawRing(still?0:hp);
+
+ // escenas
+ const total=show.offsetHeight-H,p=total>0?clamp(-show.getBoundingClientRect().top/total):0;
+ const n=scenes.length,f=p*n,i=Math.min(n-1,Math.floor(f)),t=f-i;
+ setScene(i);
+ if(still){imgs.forEach(im=>im.classList.toggle('on',im.dataset.k==='obra'));items.forEach(el=>el.classList.add('on'))}
+ if(!still){
+  const edge=i===0?Math.max(0,2*t-1):i===n-1?Math.min(0,2*t-1):2*t-1;
+  const ang=Math.sign(edge)*90*Math.abs(edge)**3;
+  card.style.transform=`rotateX(${tiltX}deg) rotateY(${ang+tiltY}deg) rotateZ(${(t-.5)*-4}deg) scale(${1+.06*Math.sin(t*Math.PI)})`;
+  big.style.transform=`translateY(-50%) translateX(${(.5-t)*12}vw)`;
+ }
+ springs();
+ requestAnimationFrame(tick);
+}
+addEventListener('resize',()=>{R=layoutRing()});
+requestAnimationFrame(tick);
+
+/* ---------- formulario ---------- */
+/* Número de WhatsApp de Laura: código de país + número, sin espacios ni signos. Ej. México: 529991234567 */
+const WHATSAPP='529993187613';
+const form=$('#form'),done=$('#done');
+$$('[data-level]').forEach(a=>a.addEventListener('click',()=>{const r=form.querySelector(`input[name=nivel][value="${a.dataset.level}"]`);if(r)r.checked=true}));
+form.addEventListener('submit',e=>{
+ e.preventDefault();
+ const nombre=$('#nombre'),tel=$('#tel'),email=$('#email'),nivel=form.querySelector('input[name=nivel]:checked');
+ const checks=[[nombre.parentElement,!nombre.value.trim()],[tel.parentElement,tel.value.replace(/\D/g,'').length<8],[email.parentElement,!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email.value.trim())],[$('#f-nivel'),!nivel],[$('#f-edad'),!$('#edad').checked]];
+ checks.forEach(([el,b])=>{el.classList.toggle('bad',b);const inp=el.querySelector('input');if(inp)inp.setAttribute('aria-invalid',b)});
+ const bads=checks.filter(c=>c[1]),sum=$('#summary');
+ if(bads.length){
+  $('#sumList').innerHTML=bads.map(([el])=>{const inp=el.querySelector('input');return `<li><a href="#${inp.id}">${el.querySelector('.err').textContent}</a></li>`}).join('');
+  sum.hidden=false;sum.focus();return;
+ }
+ sum.hidden=true;
+ const rows=[['Nombre',nombre.value.trim()],['Teléfono',tel.value.trim()],['Correo',email.value.trim()],['Nivel',nivel.value],['Horario',$('#horario').value],['Técnica',$('#tecnica').value]];
+ if($('#msg').value.trim())rows.push(['Mensaje',$('#msg').value.trim()]);
+ const txt=['Hola Laura, quiero inscribirme a las clases de pintura.',...rows.map(([k,v])=>`${k}: ${v}`)].join('\n');
+ const url=`https://wa.me/${WHATSAPP}?text=${encodeURIComponent(txt)}`;
+ // 1) Abrir WhatsApp de inmediato (en el mismo clic, para que el navegador no lo bloquee)
+ // Dentro de una vista previa (iframe) WhatsApp rechaza abrirse: ahí solo se muestra el botón
+ let framed=true;try{framed=window.self!==window.top}catch(e){}
+ const wa=$('#waBtn');wa.href=url;
+ if(framed){wa.removeAttribute('target')}
+ else{try{window.open(url,'_blank','noopener')}catch(e){}}
+ // 2) Guardar copia en Netlify Forms como respaldo (no bloquea al alumno)
+ if(!(/claude|localhost|^$/.test(location.hostname)||location.protocol==='file:')){
+  fetch('/',{method:'POST',keepalive:true,headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams(new FormData(form)).toString()}).catch(()=>{});
+ }
+ // 3) Mostrar confirmación con botón de respaldo por si WhatsApp no se abrió
+ const esc=t=>t.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+ $('#dName').textContent=nombre.value.trim().split(' ')[0];
+ $('#dList').innerHTML=rows.map(([k,v])=>`<dt>${k}</dt><dd>${esc(v)}</dd>`).join('');
+ wa.hidden=false;$('#waNote').hidden=false;
+ form.style.display='none';done.style.display='block';done.focus();
+});
+$('#sumList').addEventListener('click',e=>{const a=e.target.closest('a');if(a){e.preventDefault();$(a.getAttribute('href')).focus()}});
+$('#menuBtn').addEventListener('click',()=>{const u=$('#navList'),o=u.classList.toggle('open');$('#menuBtn').setAttribute('aria-expanded',o)});
+$$('#navList a').forEach(a=>a.addEventListener('click',()=>{$('#navList').classList.remove('open');$('#menuBtn').setAttribute('aria-expanded',false)}));
+$('#again').addEventListener('click',()=>{done.style.display='none';form.style.display='block';$('#nombre').focus()});
+}
+</script>
+</body>
+</html>
